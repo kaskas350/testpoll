@@ -10,7 +10,7 @@ class poll_results extends CBitrixComponent {
         ];
         $arResult=[];
         $elements = CIBlockElement::GetList([],[
-            "IBLOCK_ID"=>5
+            "IBLOCK_CODE" => 'forma',
         ]);
         $arParameters=[];
         while($element = $elements->GetNextElement())
@@ -27,7 +27,7 @@ class poll_results extends CBitrixComponent {
             }
         }
         $elements = CIBlockElement::GetList([],[
-            "IBLOCK_ID"=>6
+             "IBLOCK_CODE" => 'ROD_DEYATELNOSTI',
         ]);
 
         while($element = $elements->Fetch())
@@ -36,11 +36,16 @@ class poll_results extends CBitrixComponent {
         }
 
 
-        $properties = CIBlock::GetProperties(5);
+		$objCIBlock = new CIBlock;
+		$blocks = CIBlock::GetList([],[
+		"CODE"=>"forma"
+		]);
+		$idBlock = ($blocks->Fetch())["ID"];
+		
 
+        $properties = CIBlock::GetProperties($idBlock);
         while($property = $properties->Fetch())
         {
-
             if (in_array($property["CODE"],$arCodeProperties))
             {
                 $arResult[$property["CODE"]]["NAME"]=$property["NAME"];
@@ -52,7 +57,6 @@ class poll_results extends CBitrixComponent {
 
                 while ($enum = $objEnum->Fetch())
                 {
-
                     $arResult[$property["CODE"]]["VARIABLE"][] = [
                         "NAME"=>$enum["VALUE"],
                         "COUNT"=>$arParameters[$enum["PROPERTY_CODE"]][$enum["ID"]]

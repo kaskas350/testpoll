@@ -5,19 +5,13 @@ $APPLICATION->SetTitle("Мебельная компания");
 <?
 if (CModule::IncludeModule("iblock")) {
 
-    $typeIBlocks = CIBlockType::GetByID("test");
-    $typeIBlock = $typeIBlocks->Fetch();
     $objCIBlockType = new CIBlockType;
+	$objCIBlockType->Delete('test');
     $objCIBlock = new CIBlock;
     $objCIBlockProperty = new CIBlockProperty;
     $objCIBlockElement = new CIBlockElement;
-    /*
-     *
-     *
-     * */
-    if (empty($typeIBlock)) {
-        //если не существует типа инфоблока
-       echo 34;
+   
+        
         $arFields = [
             "ID" => "test",
             "LANG" =>[
@@ -28,11 +22,11 @@ if (CModule::IncludeModule("iblock")) {
             ]
         ];
         $objCIBlockType->Add($arFields);
-    }
+    
 
 
      $iblocks = CIBlock::GetList([], [
-        "CODE" => ["forma", "ROD_DEYATELNOSTI1"]
+        "CODE" => ["forma", "ROD_DEYATELNOSTI"]
     ]);
     $arCode = [];
 
@@ -43,55 +37,58 @@ if (CModule::IncludeModule("iblock")) {
     }
 
     $idRodDeyat = 0;
-    if (!in_array("ROD_DEYATELNOSTI1", $arCode)) {
+    if (!in_array("ROD_DEYATELNOSTI", $arCode)) {
         $arFields = [
             "LID" => "s1",
-            "CODE" => "ROD_DEYATELNOSTI1",
+            "CODE" => "ROD_DEYATELNOSTI",
             "IBLOCK_TYPE_ID"=>"test",
-            "NAME"=>"Род деятельности"
+            "NAME"=>"Род деятельности",
         ];
-        $idRodDeyat = $idBlock = $objCIBlock->Add($arFields);
+        $idRodDeyat = $objCIBlock->Add($arFields);
+		CIBlock::SetPermission($idRodDeyat,[
+		2=>"X"
+		]);
 
         $arFields = [
             0=> [
                 "CODE"=> "working",
                 "NAME"=> "Рабочий",
-                "IBLOCK_ID"=>$idBlock,
+                "IBLOCK_ID"=>$idRodDeyat,
             ],
             1=> [
                 "CODE"=> "employee",
                 "NAME"=> "Служащий",
-                "IBLOCK_ID"=>$idBlock,
+                "IBLOCK_ID"=>$idRodDeyat,
             ],
             2=> [
                 "CODE"=> "student",
                 "NAME"=> "Студент",
-                "IBLOCK_ID"=>$idBlock,
+                "IBLOCK_ID"=>$idRodDeyat,
             ],
             3=> [
                 "CODE"=> "head",
                 "NAME"=> "Руководитель",
-                "IBLOCK_ID"=>$idBlock,
+                "IBLOCK_ID"=>$idRodDeyat,
             ],
             4=> [
                 "CODE"=> "pensioner",
                 "NAME"=> "Пенсионер",
-                "IBLOCK_ID"=>$idBlock,
+                "IBLOCK_ID"=>$idRodDeyat,
             ],
             5=> [
                 "CODE"=> "housewife",
                 "NAME"=> "Домохозяйка",
-                "IBLOCK_ID"=>$idBlock,
+                "IBLOCK_ID"=>$idRodDeyat,
             ],
             6=> [
                 "CODE"=> "nothing",
                 "NAME"=> "Ничем",
-                "IBLOCK_ID"=>$idBlock,
+                "IBLOCK_ID"=>$idRodDeyat,
             ],
             7=> [
                 "CODE"=> "other",
                 "NAME"=> "Другое",
-                "IBLOCK_ID"=>$idBlock,
+                "IBLOCK_ID"=>$idRodDeyat,
             ],
         ];
         foreach ($arFields as $fields) {
@@ -108,6 +105,9 @@ if (CModule::IncludeModule("iblock")) {
             "NAME"=>"Форма"
         ];
         $idBlock = $objCIBlock->Add($arFields);
+		CIBlock::SetPermission($idBlock,[
+		2=>"R"
+		]);
         $arIdProperty=[];
        $arPropertyFields = [
            0=> [
@@ -137,14 +137,14 @@ if (CModule::IncludeModule("iblock")) {
                "NAME"=> "Род Деятельности",
                "LINK_IBLOCK_ID" => $idRodDeyat,
                "PROPERTY_TYPE"=> "E",
-               "MULTIPLE"=>"N"
+               "MULTIPLE"=>"Y"
            ],
            4=> [
                "IBLOCK_ID"=>$idBlock,
                "CODE"=> "AGE",
                "NAME"=> "Возраст",
                "PROPERTY_TYPE"=> "L",
-               "MULTIPLE"=>"Y"
+               "MULTIPLE"=>"N"
            ],
            5=> [
                "IBLOCK_ID"=>$idBlock,
@@ -206,8 +206,6 @@ if (CModule::IncludeModule("iblock")) {
     {
         CIBlockPropertyEnum::Add($enums);
     }
-
-
     }
 }
 

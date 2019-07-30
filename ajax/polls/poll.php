@@ -1,6 +1,8 @@
 <? require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 if (CModule::IncludeModule("iblock")) {
-    if (empty($_GET["name"]) || (empty($_GET["family"])) || (empty($_GET["career"]))) {
+    
+	
+	if (empty($_GET["name"]) || (empty($_GET["family"])) || (empty($_GET["career"]))) {
         echo "N";
         die;
     }
@@ -11,7 +13,7 @@ if (CModule::IncludeModule("iblock")) {
         $idUser = session_id();
     }
     $elements = CIBlockElement::GetList([], [
-        "IBLOCK_ID" => 5,
+        "IBLOCK_CODE" => 'forma',
         "PROPERTY_ID" => $idUser
     ]);
     $element = $elements->Fetch();
@@ -21,7 +23,7 @@ if (CModule::IncludeModule("iblock")) {
     }
     $newPoll = new CIBlockElement;
     $objCareers = CIBlockElement::GetList([], [
-        "IBLOCK_ID" => 6,
+          "IBLOCK_CODE" => 'ROD_DEYATELNOSTI',
         "CODE" => $_GET["career"]
     ], false, false, ["ID"]);
     $arIdCareer = [];
@@ -30,15 +32,29 @@ if (CModule::IncludeModule("iblock")) {
     };
     unset($objCareers);
     unset($idCareer);
+	
+	
+	$enums = CIBlockPropertyEnum::GetList([],[
+	"XML_ID"=>[$_GET["pol"],$_GET["age"]]
+	]);
+	
+	$arEnums = [];
+	
+	while($enum = $enums->Fetch())
+	{
+		$arEnums[$enum["PROPERTY_CODE"]] = $enum["ID"];
+	}
+	$blocks = CIBlock::GetList([],["CODE"=>"forma"]);
+	$block = $blocks->Fetch();
     $arFields = [
         "NAME" => $_GET["name"] . " " . $_GET["family"],
-        "IBLOCK_ID" => 5,
+        "IBLOCK_ID" => $block["ID"],
         "PROPERTY_VALUES" => [
             "IMYA" => $_GET["name"],
             "FAMILIYA" => $_GET["family"],
             "ROD_DEYATELNOSTI" => $arIdCareer,
-            "POL" => $_GET["pol"],
-            "AGE" => $_GET["age"]
+            "POL" => $arEnums["POL"],
+            "AGE" => $arEnums["AGE"]
         ]
     ];
     if ($USER->IsAuthorized()) {
@@ -46,7 +62,15 @@ if (CModule::IncludeModule("iblock")) {
     } else {
         $arFields["PROPERTY_VALUES"]["ID"] = session_id();
     }
-    $newPoll->Add($arFields);
+	
+    if($newPoll->Add($arFields)){
+		
+		echo "Yes";
+	} else {
+		echo "No";
+		
+	};
+	die;
 }
 ?>
 

@@ -1,4 +1,4 @@
-<?//echo session_id();?>
+<?//pr($arResult);?>
 <div class="container">
     <?if(empty($arResult["USER"])):?>
     <form>

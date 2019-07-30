@@ -12,7 +12,7 @@ class poll extends CBitrixComponent
     public function getCareer()
     {
         $careers = CIBlockElement::GetList([], [
-            "IBLOCK_ID" => 6
+            "IBLOCK_CODE" => "ROD_DEYATELNOSTI"
         ], false, false, ["NAME", "CODE"]);
         $arCareer = [];
         while ($career = $careers->Fetch()) {
@@ -28,11 +28,11 @@ class poll extends CBitrixComponent
     {
        $objBlock = new CIBlock;
         $blocks = CIBlock::GetList([],["CODE"=>"forma"]);
-       $block = $blocks->Fetch();
+        $block = $blocks->Fetch();
         $properties =$objBlock->GetProperties($block["ID"]);
         $arResult = [];
         while ($property = $properties->Fetch()) {
-            $this->arResult["FIELDS"][$property["CODE"]] = [
+            $arResult["FIELDS"][$property["CODE"]] = [
                 "NAME" => $property["NAME"]
             ];
             if ($property["PROPERTY_TYPE"] == 'L') {
@@ -40,13 +40,17 @@ class poll extends CBitrixComponent
                     "PROPERTY_ID" => $property["ID"]
                 ]);
                 while ($propertyEnum = $propertyEnums->Fetch()) {
-                    $arResult["FIELDS"][$property["CODE"]]["enum"][$propertyEnum["ID"]] = $propertyEnum["VALUE"];
+				
+                    $arResult["FIELDS"][$property["CODE"]]["enum"][$propertyEnum["XML_ID"]] = $propertyEnum["VALUE"];
                 }
+				
             }
             if ($property["CODE"] == "ROD_DEYATELNOSTI") {
                 $arResult["FIELDS"][$property["CODE"]]["career"] = $this->getCareer();
             }
         }
+		
+		
         return $arResult;
     }
 
@@ -59,7 +63,7 @@ class poll extends CBitrixComponent
             $idUser = session_id();
         }
             $elements = CIBlockElement::GetList([],[
-                "IBLOCK_ID"=>5,
+                 "IBLOCK_CODE" => 'forma',
                 "PROPERTY_ID"=>$idUser
             ]);
             $element = $elements->Fetch();
@@ -68,8 +72,11 @@ class poll extends CBitrixComponent
 
     public function executeComponent()
     {
-        if (CModule::IncludeModule("iblock")) {
-            $this->arResult["DATA"] = $this->getForms();
+		
+		
+		if (CModule::IncludeModule("iblock")) {
+           
+		   $this->arResult["DATA"] = $this->getForms();
             $this->arResult["USER"] = $this->usersValidate();
         }
         $this->includeComponentTemplate();
