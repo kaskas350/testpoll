@@ -1,6 +1,7 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 IncludeTemplateLangFile(__FILE__);
 ?>
+<?//$APPLICATION->AddChainItem($APPLICATION->GetTitle());?>
 			</div>
 		</div>
 		<div id="space-for-footer"></div>

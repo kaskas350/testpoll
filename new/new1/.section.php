@@ -1,0 +1,2 @@
+<?php
+$sSectionName = "new1";

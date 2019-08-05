@@ -1,5 +1,13 @@
 <?php
 $arUrlRewrite=array (
+  3 => 
+  array (
+    'CONDITION' => '#^/polls/poll/#',
+    'RULE' => '',
+    'ID' => 'serge:poll',
+    'PATH' => '/polls/index.php',
+    'SORT' => 100,
+  ),
   0 => 
   array (
     'CONDITION' => '#^/services/#',
@@ -8,7 +16,7 @@ $arUrlRewrite=array (
     'PATH' => '/services/index.php',
     'SORT' => 100,
   ),
-  1 => 
+  4 => 
   array (
     'CONDITION' => '#^/products/#',
     'RULE' => '',
@@ -24,12 +32,4 @@ $arUrlRewrite=array (
     'PATH' => '/news/index.php',
     'SORT' => 100,
   ),
-    3 => array(
-    'CONDITION' => '#^/polls/poll/#',
-    'RULE' => '',
-    'ID' => 'serge:poll',
-    'PATH' => '/polls/index.php',
-    'SORT' => 100,
-
-    )
 );
